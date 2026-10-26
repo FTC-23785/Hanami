@@ -85,7 +85,7 @@ public class DriveSubsystem extends LinearOpMode {
             }
         }
     }
-
+//del deadband?--> see comment in DriveConstants
     private double applyDeadband(double value) {
         if (Math.abs(value) <= DriveConstants.JOYSTICK_DEADBAND) {
             return 0.0;
