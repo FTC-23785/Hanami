@@ -1,51 +1,17 @@
 package org.firstinspires.ftc.teamcode.subsystems.Drive;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import org.firstinspires.ftc.teamcode.subsystems.Shooter.FlywheelSubsystem;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
-@TeleOp(name = "MainTeleOp", group = "TeleOp")
-public class MainTeleOp extends LinearOpMode {
+public class DriveSubsystem {
 
-    private DcMotor frontLeft;
-    private DcMotor frontRight;
-    private DcMotor backLeft;
-    private DcMotor backRight;
+    private final DcMotor frontLeft;
+    private final DcMotor frontRight;
+    private final DcMotor backLeft;
+    private final DcMotor backRight;
 
-    @Override
-    public void runOpMode() {
-        initializeDrive();
-        FlywheelSubsystem flywheel = new FlywheelSubsystem(hardwareMap); //basically line 12 in FlywheelSub
-
-        telemetry.addLine("Ready");
-        telemetry.update();
-
-        try {
-            waitForStart();
-
-            if (isStopRequested()) {
-                return;
-            }
-
-            while (opModeIsActive()) {
-                drive();
-                idle();
-
-                if (gamepad1.right_trigger > 0) {
-                    flywheel.runForward();
-                } else {
-                    flywheel.stop();
-                }
-            }
-        } finally {
-            stopDrive();
-            flywheel.stop();
-        }
-    }
-
-    private void initializeDrive() {
+    public DriveSubsystem(HardwareMap hardwareMap) {
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
@@ -63,10 +29,7 @@ public class MainTeleOp extends LinearOpMode {
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
-    private void drive() {
-        double forward = (-gamepad1.left_stick_y);
-        double strafe = (gamepad1.left_stick_x);
-        double turn = (gamepad1.right_stick_x);
+    public void drive(double forward, double strafe, double turn) {
         double denominator = Math.max(
                 Math.abs(forward) + Math.abs(strafe) + Math.abs(turn), 1.0);
 
@@ -76,7 +39,7 @@ public class MainTeleOp extends LinearOpMode {
         backRight.setPower((forward + strafe - turn) / denominator);
     }
 
-    private void stopDrive() {
+    public void stopDrive() {
         frontLeft.setPower(0.0);
         frontRight.setPower(0.0);
         backLeft.setPower(0.0);
