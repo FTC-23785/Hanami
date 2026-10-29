@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter.FlywheelSubsystem;
 
-@TeleOp(name = "MainTeleOp", group = "TeleOp")
+@TeleOp(name = "MainTeleOpTest", group = "TeleOp")
 public class MainTeleOp extends LinearOpMode {
 
     private DcMotor frontLeft;
@@ -64,7 +64,7 @@ public class MainTeleOp extends LinearOpMode {
     }
 
     private void drive() {
-        double forward = (-gamepad1.left_stick_y);
+        double forward = (gamepad1.left_stick_y);
         double strafe = (gamepad1.left_stick_x);
         double turn = (gamepad1.right_stick_x);
         double denominator = Math.max(
