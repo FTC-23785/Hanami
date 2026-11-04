@@ -24,8 +24,8 @@ public final class DriveConstants {
     public static final DcMotor.ZeroPowerBehavior ZERO_POWER_BEHAVIOR =
             DcMotor.ZeroPowerBehavior.BRAKE;
 
-    public static final double DRIVE_SPEED = 1.0;
-    public static final double TURN_SPEED = 1.0;
+    public static final double DRIVE_SPEED = 0.5;
+    public static final double TURN_SPEED = 0.5;
     //gpt says we need deadband? del later if it doesnt matter
     public static final double JOYSTICK_DEADBAND = 0.05;
 
