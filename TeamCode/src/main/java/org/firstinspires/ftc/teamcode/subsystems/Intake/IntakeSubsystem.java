@@ -52,4 +52,13 @@ public class IntakeSubsystem {
             runReverse();
         }
     }
+
+    public String getStateName() {
+        return state.name();
+    }
+
+    // This is the requested power; it does not measure physical wheel motion.
+    public double getCommandedPower() {
+        return intakeMotor.getPower();
+    }
 }
