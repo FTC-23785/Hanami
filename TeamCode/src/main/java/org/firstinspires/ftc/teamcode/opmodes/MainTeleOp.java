@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Shooter.FlywheelSubsystem;
 @TeleOp(name = "MainTeleOp", group = "TeleOp")
 public class MainTeleOp extends LinearOpMode {
 
-    private static final double FLYWHEEL_TRIGGER_THRESHOLD = 0.1;
+    private static final double FLYWHEEL_TRIGGER_THRESHOLD = 0.25;
 
     @Override
     public void runOpMode() {
@@ -21,11 +21,11 @@ public class MainTeleOp extends LinearOpMode {
         boolean previousLeftBumper = false;
         boolean previousRightBumper = false;
 
-        telemetry.addLine("Ready");
-        telemetry.addLine("Left bumper: toggle intake forward");
-        telemetry.addLine("Right bumper: toggle intake reverse");
-        telemetry.addLine("Right trigger: hold to run flywheel");
-        showIntakeStatus(intake);
+        telemetry.addLine("Ready - using gamepad 1");
+        telemetry.addLine("Left stick: drive/strafe | Right stick X: turn");
+        telemetry.addLine("LB: toggle intake forward | RB: toggle intake reverse");
+        telemetry.addLine("Both bumpers: stop intake | Hold RT: flywheel");
+        telemetry.update();
 
         try {
             waitForStart();
@@ -35,13 +35,13 @@ public class MainTeleOp extends LinearOpMode {
             }
 
             while (opModeIsActive()) {
-                // Sample once so holding a bumper counts as a single press.
+                drive.drive(gamepad1);
+
+                // A held bumper counts as one press until it is released.
                 boolean leftBumper = gamepad1.left_bumper;
                 boolean rightBumper = gamepad1.right_bumper;
                 boolean leftBumperPressed = leftBumper && !previousLeftBumper;
                 boolean rightBumperPressed = rightBumper && !previousRightBumper;
-
-                drive.drive(gamepad1);
 
                 if (leftBumper && rightBumper) {
                     intake.stop();
@@ -54,15 +54,11 @@ public class MainTeleOp extends LinearOpMode {
                 previousLeftBumper = leftBumper;
                 previousRightBumper = rightBumper;
 
+                // Both bumpers belong to the intake; hold RT to run the flywheel.
                 if (gamepad1.right_trigger > FLYWHEEL_TRIGGER_THRESHOLD) {
                     flywheel.runForward();
                 } else {
                     flywheel.stop();
-                }
-
-                // Update only on a bumper press, rather than every loop.
-                if (leftBumperPressed || rightBumperPressed) {
-                    showIntakeStatus(intake);
                 }
 
                 idle();
@@ -72,11 +68,5 @@ public class MainTeleOp extends LinearOpMode {
             intake.stop();
             flywheel.stop();
         }
-    }
-
-    private void showIntakeStatus(IntakeSubsystem intake) {
-        telemetry.addData("Intake mode", intake.getStateName());
-        telemetry.addData("Intake commanded power", intake.getCommandedPower());
-        telemetry.update();
     }
 }

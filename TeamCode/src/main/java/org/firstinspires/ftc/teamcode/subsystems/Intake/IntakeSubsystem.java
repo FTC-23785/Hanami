@@ -19,7 +19,7 @@ public class IntakeSubsystem {
         intakeMotor.setPower(0.0);
         intakeMotor.setDirection(IntakeConstants.MOTOR_DIRECTION);
         intakeMotor.setZeroPowerBehavior(IntakeConstants.ZERO_POWER_BEHAVIOR);
-        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intakeMotor.setMode(IntakeConstants.RUN_MODE);
     }
 
     public void runForward() {
@@ -57,7 +57,7 @@ public class IntakeSubsystem {
         return state.name();
     }
 
-    // This is the requested power; it does not measure physical wheel motion.
+    // Requested power; this does not measure physical wheel motion.
     public double getCommandedPower() {
         return intakeMotor.getPower();
     }
