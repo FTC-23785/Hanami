@@ -35,12 +35,6 @@ public class MainTeleOp extends OpMode {
         drive.loop();
         intake.loop();   // bumpers: right = forward toggle, left = reverse toggle
         index.loop();
-
-        // Hold right trigger to run the flywheel
-        if (gamepad1.right_trigger > 0) {
-            flywheel.runForward();
-        } else {
-            flywheel.stop();
-        }
+        flywheel.idle();
     }
 }

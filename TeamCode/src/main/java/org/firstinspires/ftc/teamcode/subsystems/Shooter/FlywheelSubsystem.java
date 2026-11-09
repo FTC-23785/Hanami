@@ -72,13 +72,6 @@ public class FlywheelSubsystem {
         }
         return instance;
     }
-    // Run flywheel at shooting velocity
-    public void runForward() {
-
-        setVelocity(
-                FlywheelConstants.SHOOT_VELOCITY_TPS);
-    }
-
     // Set a specific flywheel velocity
     public void setVelocity(double ticksPerSecond) {
 
@@ -124,12 +117,7 @@ public class FlywheelSubsystem {
                 <= FlywheelConstants.VELOCITY_TOLERANCE_TPS;
     }
 
-    public void loop(){
-
-        if (gamepad1.right_trigger > 0 ) {
-            runForward();
-        } else {
-            stop();
-        }
+    public void idle(){
+        setVelocity(FlywheelConstants.SHOOT_VELOCITY_TPS);
     }
 }

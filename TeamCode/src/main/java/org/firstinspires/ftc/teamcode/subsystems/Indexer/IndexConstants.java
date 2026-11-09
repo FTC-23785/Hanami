@@ -4,8 +4,7 @@ public class IndexConstants {
     public static final String INDEXER_NAME = "indexerServo";
 
     public enum IndexState {
-        INTAKE(1.0),
-        OUTTAKE(-1.0),
+        SHOOT(1.0),
         STOP(0.0);
 
         private final double power;

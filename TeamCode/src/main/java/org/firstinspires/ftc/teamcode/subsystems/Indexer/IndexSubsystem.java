@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.subsystems.Indexer.IndexConstants.IndexState;
+import org.firstinspires.ftc.teamcode.subsystems.Intake.IntakeConstants;
 
 public class IndexSubsystem {
     private Gamepad gamepad1;
@@ -47,20 +48,11 @@ public class IndexSubsystem {
     }
 
     public void loop() {
-        boolean x = gamepad1.x;
-        boolean y = gamepad1.y;
-        boolean xPressed = x && !previousX;
-        boolean yPressed = y && !previousY;
 
-        if (x && y) {
-            setState(IndexState.STOP);
-        } else if (xPressed) {
-            setState(IndexState.INTAKE);
-        } else if (yPressed) {
-            setState(IndexState.OUTTAKE);
+        if (gamepad1.left_trigger_pressed) {
+            setState(IndexConstants.IndexState.STOP);
+        } else {
+            setState(IndexState.SHOOT);
         }
-
-        previousX = x;
-        previousY = y;
     }
 }
