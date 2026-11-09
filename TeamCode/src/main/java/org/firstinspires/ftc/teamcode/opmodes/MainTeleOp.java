@@ -1,71 +1,45 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.subsystems.Drive.DriveSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.Indexer.IndexSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Intake.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter.FlywheelSubsystem;
 
-@TeleOp(name = "MainTeleOp", group = "TeleOp")
-public class MainTeleOp extends LinearOpMode {
+@TeleOp(name = "Testing")
+public class MainTeleOp extends OpMode {
 
-    private static final double FLYWHEEL_TRIGGER_THRESHOLD = 0.25;
+    DriveSubsystem drive;
+    IndexSubsystem index;
+    IntakeSubsystem intake;
+    FlywheelSubsystem flywheel;
 
     @Override
-    public void runOpMode() {
-        DriveSubsystem drive = new DriveSubsystem(hardwareMap);
-        IntakeSubsystem intake = new IntakeSubsystem(hardwareMap);
-        FlywheelSubsystem flywheel = new FlywheelSubsystem(hardwareMap);
+    public void init() {
+        index = IndexSubsystem.getInstance(hardwareMap, gamepad1);
+        drive = DriveSubsystem.getInstance(hardwareMap, gamepad1);
+        intake = IntakeSubsystem.getInstance(hardwareMap, gamepad1);
+        flywheel = FlywheelSubsystem.getInstance(hardwareMap, gamepad1);
 
-        boolean previousLeftBumper = false;
-        boolean previousRightBumper = false;
+        drive.init();
+        intake.init();
+        index.init();
+        flywheel.init();
+    }
 
-        telemetry.addLine("Ready - using gamepad 1");
-        telemetry.addLine("Left stick: drive/strafe | Right stick X: turn");
-        telemetry.addLine("LB: toggle intake forward | RB: toggle intake reverse");
-        telemetry.addLine("Both bumpers: stop intake | Hold RT: flywheel");
-        telemetry.update();
+    @Override
+    public void loop() {
+        // Each subsystem reads the gamepad itself
+        drive.loop();
+        intake.loop();   // bumpers: right = forward toggle, left = reverse toggle
+        index.loop();
 
-        try {
-            waitForStart();
-
-            if (isStopRequested()) {
-                return;
-            }
-
-            while (opModeIsActive()) {
-                drive.drive(gamepad1);
-
-                // A held bumper counts as one press until it is released.
-                boolean leftBumper = gamepad1.left_bumper;
-                boolean rightBumper = gamepad1.right_bumper;
-                boolean leftBumperPressed = leftBumper && !previousLeftBumper;
-                boolean rightBumperPressed = rightBumper && !previousRightBumper;
-
-                if (leftBumper && rightBumper) {
-                    intake.stop();
-                } else if (leftBumperPressed) {
-                    intake.toggleForward();
-                } else if (rightBumperPressed) {
-                    intake.toggleReverse();
-                }
-
-                previousLeftBumper = leftBumper;
-                previousRightBumper = rightBumper;
-
-                // Both bumpers belong to the intake; hold RT to run the flywheel.
-                if (gamepad1.right_trigger > FLYWHEEL_TRIGGER_THRESHOLD) {
-                    flywheel.runForward();
-                } else {
-                    flywheel.stop();
-                }
-
-                idle();
-            }
-        } finally {
-            drive.stop();
-            intake.stop();
+        // Hold right trigger to run the flywheel
+        if (gamepad1.right_trigger > 0) {
+            flywheel.runForward();
+        } else {
             flywheel.stop();
         }
     }

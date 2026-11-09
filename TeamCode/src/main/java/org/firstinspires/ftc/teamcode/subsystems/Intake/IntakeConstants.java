@@ -1,21 +1,21 @@
 package org.firstinspires.ftc.teamcode.subsystems.Intake;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+public class IntakeConstants {
+    public static final String INTAKE_NAME = "intake";
 
-public final class IntakeConstants {
+    public enum intakeState {
+        FORWARD(1.0),
+        REVERSE(-1.0),
+        STOP(0.0);
 
-    public static final String MOTOR_NAME = "intake";
+        private final double power;
 
-    public static final double FORWARD_POWER = 1.0;
-    public static final double REVERSE_POWER = -1.0;
+        intakeState(double power) {
+            this.power = power;
+        }
 
-    public static final DcMotorSimple.Direction MOTOR_DIRECTION =
-            DcMotorSimple.Direction.FORWARD;
-
-    public static final DcMotor.RunMode RUN_MODE = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
-    public static final DcMotor.ZeroPowerBehavior ZERO_POWER_BEHAVIOR =
-            DcMotor.ZeroPowerBehavior.BRAKE;
-
-    private IntakeConstants() {}
+        public double getPower() {
+            return power;
+        }
+    }
 }

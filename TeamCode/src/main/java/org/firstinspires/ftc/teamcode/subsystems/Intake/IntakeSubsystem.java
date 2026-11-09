@@ -1,64 +1,66 @@
 package org.firstinspires.ftc.teamcode.subsystems.Intake;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.subsystems.Intake.IntakeConstants.intakeState;
+
 public class IntakeSubsystem {
+    private DcMotor intakeMotor;
+    private HardwareMap hardwareMap;
+    private Gamepad gamepad1;
+    private static IntakeSubsystem instance;
+    private intakeState state = intakeState.STOP;
 
-    private enum State {
-        STOPPED,
-        FORWARD,
-        REVERSE
+    private boolean previousLeftBumper;
+    private boolean previousRightBumper;
+
+    private IntakeSubsystem(HardwareMap hardwareMap, Gamepad gamepad1) {
+        this.hardwareMap = hardwareMap;
+        this.gamepad1 = gamepad1;
     }
 
-    private final DcMotor intakeMotor;
-    private State state = State.STOPPED;
-
-    public IntakeSubsystem(HardwareMap hardwareMap) {
-        intakeMotor = hardwareMap.get(DcMotor.class, IntakeConstants.MOTOR_NAME);
-        intakeMotor.setPower(0.0);
-        intakeMotor.setDirection(IntakeConstants.MOTOR_DIRECTION);
-        intakeMotor.setZeroPowerBehavior(IntakeConstants.ZERO_POWER_BEHAVIOR);
-        intakeMotor.setMode(IntakeConstants.RUN_MODE);
-    }
-
-    public void runForward() {
-        intakeMotor.setPower(IntakeConstants.FORWARD_POWER);
-        state = State.FORWARD;
-    }
-
-    public void runReverse() {
-        intakeMotor.setPower(IntakeConstants.REVERSE_POWER);
-        state = State.REVERSE;
-    }
-
-    public void stop() {
-        intakeMotor.setPower(0.0);
-        state = State.STOPPED;
-    }
-
-    public void toggleForward() {
-        if (state == State.FORWARD) {
-            stop();
+    public static IntakeSubsystem getInstance(HardwareMap hardwareMap, Gamepad gamepad1) {
+        if (instance == null) {
+            instance = new IntakeSubsystem(hardwareMap, gamepad1);
         } else {
-            runForward();
+            // refresh references in case a new OpMode started
+            instance.hardwareMap = hardwareMap;
+            instance.gamepad1 = gamepad1;
         }
+        return instance;
     }
 
-    public void toggleReverse() {
-        if (state == State.REVERSE) {
-            stop();
-        } else {
-            runReverse();
+    public void setState(intakeState state) {
+        this.state = state;
+        intakeMotor.setPower(state.getPower());
+    }
+
+    public void init() {
+        intakeMotor = hardwareMap.get(DcMotor.class, IntakeConstants.INTAKE_NAME);
+        setState(intakeState.STOP);
+        previousLeftBumper = false;
+        previousRightBumper = false;
+    }
+
+    public void loop() {
+        boolean leftBumper = gamepad1.left_bumper;
+        boolean rightBumper = gamepad1.right_bumper;
+        boolean leftPressed = leftBumper && !previousLeftBumper;
+        boolean rightPressed = rightBumper && !previousRightBumper;
+
+        if (leftBumper && rightBumper) {
+            setState(intakeState.STOP);
+        } else if (rightPressed) {
+            // right bumper = forward toggle
+            setState(state == intakeState.FORWARD ? intakeState.STOP : intakeState.FORWARD);
+        } else if (leftPressed) {
+            // left bumper = reverse toggle
+            setState(state == intakeState.REVERSE ? intakeState.STOP : intakeState.REVERSE);
         }
-    }
 
-    public String getStateName() {
-        return state.name();
-    }
-
-    // Requested power; this does not measure physical wheel motion.
-    public double getCommandedPower() {
-        return intakeMotor.getPower();
+        previousLeftBumper = leftBumper;
+        previousRightBumper = rightBumper;
     }
 }

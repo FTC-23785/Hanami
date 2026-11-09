@@ -6,71 +6,80 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class DriveSubsystem {
+    private final HardwareMap hardwareMap;
 
-    private final DcMotor frontLeft;
-    private final DcMotor frontRight;
-    private final DcMotor backLeft;
-    private final DcMotor backRight;
+    private static DriveSubsystem instance;
+    private final Gamepad gamepad1;
+    public DcMotor frontLeft;
+    public DcMotor frontRight;
+    public DcMotor backLeft;
+    public DcMotor backRight;
 
-    public DriveSubsystem(HardwareMap hardwareMap) {
+    private DriveSubsystem(HardwareMap hardwareMap, Gamepad gamepad1) {
+        this.hardwareMap = hardwareMap;
+        this.gamepad1 = gamepad1;
+    }
+
+    public static DriveSubsystem getInstance(HardwareMap hardwareMap, Gamepad gamepad1) {
+        if (instance == null) {
+            instance = new DriveSubsystem(hardwareMap, gamepad1);
+        }
+        return instance;
+    }
+    public void init() {
+
         frontLeft = hardwareMap.get(DcMotor.class, DriveConstants.FRONT_LEFT_NAME);
         frontRight = hardwareMap.get(DcMotor.class, DriveConstants.FRONT_RIGHT_NAME);
         backLeft = hardwareMap.get(DcMotor.class, DriveConstants.BACK_LEFT_NAME);
         backRight = hardwareMap.get(DcMotor.class, DriveConstants.BACK_RIGHT_NAME);
 
-        configureMotor(frontLeft, DriveConstants.FRONT_LEFT_DIRECTION);
-        configureMotor(frontRight, DriveConstants.FRONT_RIGHT_DIRECTION);
-        configureMotor(backLeft, DriveConstants.BACK_LEFT_DIRECTION);
-        configureMotor(backRight, DriveConstants.BACK_RIGHT_DIRECTION);
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
+
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+//        waitForStart();
+
+
+    }
+    public void loop(){
+        double y = -gamepad1.left_stick_y;
+        double x = gamepad1.left_stick_x;
+        double turn = gamepad1.right_stick_x;
+
+        double frontLeftPower = y + x + turn;
+        double backLeftPower = y - x + turn;
+        double frontRightPower = y - x - turn;
+        double backRightPower = y + x - turn;
+
+        double max =
+                Math.max(Math.abs(frontLeftPower),
+                        Math.max(Math.abs(backLeftPower),
+                                Math.max(Math.abs(frontRightPower),
+                                        Math.abs(backRightPower)
+                                )
+                        )
+                );
+
+        if (max > 1.0) {
+            frontLeftPower /= max;
+            backLeftPower /= max;
+            frontRightPower /= max;
+            backRightPower /= max;
+        }
+
+        frontLeft.setPower(frontLeftPower);
+        frontRight.setPower(frontRightPower);
+        backLeft.setPower(backLeftPower);
+        backRight.setPower(backRightPower);
     }
 
-    private void configureMotor(DcMotor motor, DcMotorSimple.Direction direction) {
-        motor.setPower(0.0);
-        motor.setDirection(direction);
-        motor.setZeroPowerBehavior(DriveConstants.ZERO_POWER_BEHAVIOR);
-        motor.setMode(DriveConstants.RUN_MODE);
-    }
 
-    public void drive(Gamepad gamepad) {
-        drive(
-                -gamepad.left_stick_y,
-                gamepad.left_stick_x,
-                gamepad.right_stick_x
-        );
-    }
-
-    // Requested robot motion: forward, right strafe, clockwise turn are positive.
-    // STRAFE_DIRECTION adapts the strafe request to your reported wheel response.
-    public void drive(double forward, double strafe, double turn) {
-        forward = applyDeadband(forward) * DriveConstants.DRIVE_SPEED;
-        strafe = applyDeadband(strafe)
-                * DriveConstants.DRIVE_SPEED * DriveConstants.STRAFE_DIRECTION;
-        turn = applyDeadband(turn) * DriveConstants.TURN_SPEED;
-
-        double frontLeftPower = forward + strafe + turn;
-        double frontRightPower = forward - strafe - turn;
-        double backLeftPower = forward - strafe + turn;
-        double backRightPower = forward + strafe - turn;
-
-        // Preserve the wheel-power ratios when combining driving, strafing, and turning.
-        double denominator = Math.max(1.0,
-                Math.max(Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower)),
-                        Math.max(Math.abs(backLeftPower), Math.abs(backRightPower))));
-
-        frontLeft.setPower(frontLeftPower / denominator);
-        frontRight.setPower(frontRightPower / denominator);
-        backLeft.setPower(backLeftPower / denominator);
-        backRight.setPower(backRightPower / denominator);
-    }
-
-    private double applyDeadband(double value) {
-        return Math.abs(value) <= DriveConstants.JOYSTICK_DEADBAND ? 0.0 : value;
-    }
-
-    public void stop() {
-        frontLeft.setPower(0.0);
-        frontRight.setPower(0.0);
-        backLeft.setPower(0.0);
-        backRight.setPower(0.0);
-    }
 }
+
+
