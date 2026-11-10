@@ -50,9 +50,9 @@ public class IndexSubsystem {
     public void loop() {
 
         if (gamepad1.left_trigger_pressed) {
-            setState(IndexConstants.IndexState.STOP);
-        } else {
             setState(IndexState.SHOOT);
+        } else {
+            setState(IndexState.STOP);
         }
     }
 }

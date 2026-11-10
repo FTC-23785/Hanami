@@ -32,7 +32,7 @@ public class MainTeleOp extends OpMode {
     @Override
     public void loop() {
         // Each subsystem reads the gamepad itself
-        drive.loop();
+        drive.drive();
         intake.loop();   // bumpers: right = forward toggle, left = reverse toggle
         index.loop();
         flywheel.idle();
