@@ -4,11 +4,11 @@ public class IntakeConstants {
     public static final String INTAKE_NAME = "intake";
 
     public enum intakeState {
-        FORWARD(1.0),
-        REVERSE(-1.0),
-        STOP(0.0);
+        FORWARD(0.5),
+        REVERSE(-1),
+        STOP(0.0),
 
-        private final double power;
+        SLOWED_FORWARD(-0.5);       private final double power;
 
         intakeState(double power) {
             this.power = power;

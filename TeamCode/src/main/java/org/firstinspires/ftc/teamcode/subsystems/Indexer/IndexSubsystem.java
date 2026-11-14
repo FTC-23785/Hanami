@@ -40,6 +40,7 @@ public class IndexSubsystem {
         indexerServo.setPower(state.getPower());
     }
 
+
     public void init() {
         indexerServo = hardwareMap.get(CRServo.class, IndexConstants.INDEXER_NAME);
         setState(IndexState.STOP);
@@ -49,7 +50,7 @@ public class IndexSubsystem {
 
     public void loop() {
 
-        if (gamepad1.left_trigger_pressed) {
+        if (gamepad1.right_trigger_pressed) {
             setState(IndexState.SHOOT);
         } else {
             setState(IndexState.STOP);

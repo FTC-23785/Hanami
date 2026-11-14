@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.subsystems.Drive.DriveSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.Indexer.IndexConstants;
 import org.firstinspires.ftc.teamcode.subsystems.Indexer.IndexSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Intake.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter.FlywheelSubsystem;
@@ -36,5 +37,6 @@ public class MainTeleOp extends OpMode {
         intake.loop();   // bumpers: right = forward toggle, left = reverse toggle
         index.loop();
         flywheel.idle();
+
     }
 }
