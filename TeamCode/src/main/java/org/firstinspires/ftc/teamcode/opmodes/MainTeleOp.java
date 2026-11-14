@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Indexer.IndexSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Intake.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter.FlywheelSubsystem;
 
-@TeleOp(name = "Testing")
+@TeleOp(name = "Main")
 public class MainTeleOp extends OpMode {
 
     DriveSubsystem drive;
