@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake.IntakeConstants.intakeSt
 
 public class IntakeSubsystem {
     // fraction of full power used while the right trigger is held (tune this)
-    private static final double SLOW_MULTIPLIER = 0.4;
+    private static final double SLOW_MULTIPLIER = 0.75;
 
     private DcMotor intakeMotor;
     private HardwareMap hardwareMap;
@@ -68,9 +68,9 @@ public class IntakeSubsystem {
         if (leftBumper && rightBumper) {
             setState(intakeState.STOP);
         } else if (rightPressed) {
-            setState(state == intakeState.FORWARD ? intakeState.STOP : intakeState.FORWARD);
-        } else if (leftPressed) {
             setState(state == intakeState.REVERSE ? intakeState.STOP : intakeState.REVERSE);
+        } else if (leftPressed) {
+            setState(state == intakeState.FORWARD ? intakeState.STOP : intakeState.FORWARD);
         } else if (slowChanged) {
             // trigger pressed or released with no bumper input: update the speed
             applyPower();
