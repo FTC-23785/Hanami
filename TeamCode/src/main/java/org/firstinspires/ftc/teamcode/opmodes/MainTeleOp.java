@@ -7,6 +7,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Drive.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Indexer.IndexConstants;
 import org.firstinspires.ftc.teamcode.subsystems.Indexer.IndexSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Intake.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeArm.IntakeArmConstants;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeArm.IntakeArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter.FlywheelSubsystem;
 
 @TeleOp(name = "Main")
@@ -17,17 +19,21 @@ public class MainTeleOp extends OpMode {
     IntakeSubsystem intake;
     FlywheelSubsystem flywheel;
 
+    IntakeArmSubsystem intakeArm;
+
     @Override
     public void init() {
         index = IndexSubsystem.getInstance(hardwareMap, gamepad1);
         drive = DriveSubsystem.getInstance(hardwareMap, gamepad1);
         intake = IntakeSubsystem.getInstance(hardwareMap, gamepad1);
         flywheel = FlywheelSubsystem.getInstance(hardwareMap, gamepad1);
+        intakeArm = IntakeArmSubsystem.getInstance(hardwareMap, gamepad1);
 
         drive.init();
         intake.init();
         index.init();
         flywheel.init();
+        intakeArm.init();
     }
 
     @Override
@@ -37,6 +43,7 @@ public class MainTeleOp extends OpMode {
         intake.loop();   // bumpers: right = forward toggle, left = reverse toggle
         index.loop();
         flywheel.idle();
+        intake.loop();
 
     }
 }

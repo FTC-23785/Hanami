@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems.Vision;
 
+import com.qualcomm.hardware.limelightvision.Limelight3A;
+
 public class VisionConstants {
     public final double limelightMountAngleDegrees = 60;
 
@@ -8,6 +10,7 @@ public class VisionConstants {
 
     // distance from the target to the floor
     public final double goalHeightInches = 48;
+
 
 //    double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
 }
