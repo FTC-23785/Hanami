@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems.IntakeArm;
 
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -28,11 +30,13 @@ public class IntakeArmSubsystem {
 
     }
     public void loop(){
-        if(gamepad1.b) {
-            intakeServo.setPosition(200);
-        }else {
-            intakeServo.setPosition(110);
-        }
+//        if(gamepad1.b) {
+//            intakeServo.setPosition(200);
+//        }else {
+//            intakeServo.setPosition(110);
+//        }
+        telemetry.addData("servo pos", intakeServo.getPosition());
+        telemetry.update();
     }
 
 }
